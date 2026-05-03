@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="en">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+<head>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ro-Person Protocol V1.0</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }header {
+  padding: 40px;
+  text-align: center;
+  background: linear-gradient(135deg, #1e293b, #020617);
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+header p {
+  color: #94a3b8;
+}
+
+section {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+h2 {
+  border-left: 4px solid #38bdf8;
+  padding-left: 10px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9em;
+  color: #64748b;
+}
+ /* SIDEBAR */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #1e293b;
+  position: fixed;
+  left: -260px;
+  top: 0;
+  padding: 20px;
+  transition: 0.3s;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  margin: 10px 0;
+  text-decoration: none;
+}
+
+/* CIRCLE BUTTON */
+.toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 10000;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggle.shift {
+  left: 235px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: #0f172a;
+  border: none;
+  color: white;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+}
+
+#logo {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  animation: fadeOut 4s forwards;
+}
+
+#logo img {
+  width: 200px;
+  animation: flicker 2s ease-out;
+}
+
+/* Flicker effect (fast → slow) */
+@keyframes flicker {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  10% { opacity: 0; }
+  15% { opacity: 1; }
+  20% { opacity: 0; }
+  30% { opacity: 1; }
+  50% { opacity: 0.5; }
+  70% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Fade out whole screen */
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+#profileBtn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  background: #38bdf8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 10000;
+}
+
+#profileOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#profilePanel {
+  width: 300px;
+  text-align: center;
+  animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  background: #0b1220;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  color: #e2e8f0;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56,189,248,0.3);
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.02);
+}
+
+  </style>
+</head>
+<div id="logo">
+  <img src="logo.png" alt="Ro-Person">
+</div>
+
+<body><!-- BUTTON -->
+<button class="toggle" id="toggleBtn" onclick="toggleSidebar()">☰</button>
+
+<div id="profileBtn" onclick="toggleProfile()">👤</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h3>Ro-Person</h3>
+  <a href="home.html">Home</a>
+  <a href="Rules.html">Rules</a>
+  <a href="faq.html">FAQ</a>
+</div>
+
+<div id="profileOverlay">
+  <div id="profilePanel" class="card">
+    
+    <div id="verifyUI" style="display:none;">
+      <h3>Ro-Person Authentication</h3>
+      <p>Please verify your email before accessing your Ro-Person.</p>
+      
+      <input type="password" id="verifyPassword" placeholder="Enter password">
+      
+      <button onclick="resendVerification()">Resend Verification</button>
+      <button onclick="checkVerification()">I have verified</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginUI">
+      <h3>Login</h3>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p onclick="showSignup()" style="cursor:pointer;">Create Account</p>
+    </div>
+
+    <!-- SIGN UP -->
+    <div id="signupUI" style="display:none;">
+      <h3>Sign Up</h3>
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <input type="password" id="confirmPassword" placeholder="Confirm Password">
+      <button onclick="signup()">Create Account</button>
+      <p onclick="showLogin()" style="cursor:pointer;">Back to Login</p>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div id="accountUI" style="display:none;">
+      <h3>Ro-Person Authentication</h3>
+      <p id="userEmail"></p>
+      <p id="userName"></p>
+
+      <input type="text" id="newName" placeholder="Change name">
+      <button onclick="changeName()">Update Name</button>
+
+      <button onclick="sendVerification()">Verify Email</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+  </div>
+</div>
+
+<button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+
+<header>
+  <h1>Homepage</h1>
+  <p>A companion that learns through memories</p>
+  <p>Your very own personal companion</p>
+</header><section>
+  <h1 id="welcomeText" style="display:none;"></h1>
+  <div class="card">
+    <p>
+      <h1>faq...</h1>
+    </p>
+  </div>
+</section><footer>
+  <p>Ro-Person Protocol V1.0 © 2026</p>
+  <p>Solaris Studio © 2026</p>
+</footer>
+<script type="module">
+import { login, signup, listenAuth, auth } from "./auth.js";
+import { toggleSidebar, toggleProfile } from "./ui.js";
+import { changeName, loadProfileUI } from "./profile.js";
+import { logout } from "./auth.js";
+
+window.login = () => login(loginEmail.value, loginPassword.value);
+window.signup = () => signup(signupEmail.value, signupPassword.value);
+window.logout = logout;
+window.toggleSidebar = toggleSidebar;
+window.toggleProfile = toggleProfile;
+window.changeName = changeName;
+
+listenAuth(async (user) => {
+  if (user && user.emailVerified) {
+    document.getElementById("loginUI").style.display = "none";
+    document.getElementById("accountUI").style.display = "block";
+
+    await loadProfileUI(user);
+  }
+});
+</script></body>
+</html>

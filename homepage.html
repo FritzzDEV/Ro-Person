@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ro-Person Protocol V1.0</title>  <style>
+    body {
+      margin: 0;
+      font-family: Courier New, monospace;
+      background: #0b1020;
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+
+    /* BOOT SCREEN */
+    .boot {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .boot h1 {
+      font-size: 22px;
+      color: #38bdf8;
+      margin-bottom: 20px;
+    }
+
+    .line {
+      font-size: 14px;
+      color: #94a3b8;
+      height: 20px;
+    }
+
+    .bar {
+      width: 320px;
+      height: 10px;
+      background: #1e293b;
+      margin-top: 20px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: #38bdf8;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #1e293b;
+      position: fixed;
+      left: -260px;
+      top: 0;
+      padding: 20px;
+      transition: 0.3s;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      margin: 10px 0;
+      text-decoration: none;
+    }
+
+    /* CIRCLE BUTTON */
+    .toggle {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 10000;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #38bdf8;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .toggle.shift {
+      left: 235px;
+    }
+
+    /* MAIN */
+    .main {
+      display: none;
+      padding: 40px;
+      margin-left: 0;
+    }
+  </style></head>
+<!-- BOOT --><div class="boot" id="boot">
+  <h1>Ro-Person System Booting...</h1>  <div class="line" id="l1"></div>
+  <div class="line" id="l2"></div>
+  <div class="line" id="l3"></div>
+  <div class="line" id="l4"></div>
+  <div class="line" id="l5"></div>
+  <div class="line" id="l6"></div>  <div class="bar">
+    <div class="fill" id="fill"></div>
+  </div>
+</div><!-- MAIN --><div class="main" id="main">
+  <h1>System Online</h1>
+  <p>Welcome, Owner.</p>
+</div><script>
+// 🔊 Boot sound (Web Audio API)
+function playBootSound() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(520, ctx.currentTime);
+
+  gain.gain.setValueAtTime(0.1, ctx.currentTime);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + 0.15);
+}
+
+let sidebarOpen = false;
+
+function toggleSidebar(){
+  sidebarOpen = !sidebarOpen;
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("toggleBtn").classList.toggle("shift");
+}
+
+let progress = 0;
+function updateBar(step){
+  progress += step;
+  document.getElementById("fill").style.width = progress + "%";
+}
+
+function type(id, text, speed, cb, barStep, longWait){
+  let i = 0;
+  const el = document.getElementById(id);
+
+  function run(){
+    if(i < text.length){
+      el.innerHTML += text[i++];
+      setTimeout(run, speed);
+    } else {
+      updateBar(barStep);
+      if(cb) setTimeout(cb, longWait ? 2500 : 1300);
+    }
+  }
+  run();
+}
+
+window.onload = () => {
+  playBootSound();
+
+  type("l1","Initializing memory core...",30,()=>{
+    playBootSound();
+    type("l2","Calibrating emotion module...",30,()=>{
+      playBootSound();
+      type("l3","Scanning personality layers...",25,()=>{
+        playBootSound();
+        type("l4","Loading behavioral engine...",25,()=>{
+          playBootSound();
+          type("l5","Synchronizing owner profile...",20,()=>{
+            playBootSound();
+            type("l6","Finalizing system integrity...",20,()=>{
+              playBootSound();
+
+              updateBar(100);
+
+              setTimeout(()=>{
+                // Redirect to another page after boot
+                window.location.href = "home.html";
+              },1200);
+
+            },15,true);
+
+          },15,true);
+        },15,false);
+      },15,true);
+    },15,false);
+  },15,false);
+};
+</script></body>
+</html>

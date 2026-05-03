@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="en">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+<head>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ro-Person Protocol V1.0</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }header {
+  padding: 40px;
+  text-align: center;
+  background: linear-gradient(135deg, #1e293b, #020617);
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+header p {
+  color: #94a3b8;
+}
+
+section {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+h2 {
+  border-left: 4px solid #38bdf8;
+  padding-left: 10px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9em;
+  color: #64748b;
+}
+ /* SIDEBAR */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #1e293b;
+  position: fixed;
+  left: -260px;
+  top: 0;
+  padding: 20px;
+  transition: 0.3s;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  margin: 10px 0;
+  text-decoration: none;
+}
+
+/* CIRCLE BUTTON */
+.toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 10000;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggle.shift {
+  left: 235px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: #0f172a;
+  border: none;
+  color: white;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+}
+
+#logo {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  animation: fadeOut 4s forwards;
+}
+
+#logo img {
+  width: 200px;
+  animation: flicker 2s ease-out;
+}
+
+/* Flicker effect (fast → slow) */
+@keyframes flicker {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  10% { opacity: 0; }
+  15% { opacity: 1; }
+  20% { opacity: 0; }
+  30% { opacity: 1; }
+  50% { opacity: 0.5; }
+  70% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Fade out whole screen */
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+#profileBtn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  background: #38bdf8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 10000;
+}
+
+#profileOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#profilePanel {
+  width: 300px;
+  text-align: center;
+  animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  background: #0b1220;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  color: #e2e8f0;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56,189,248,0.3);
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.02);
+}
+
+  </style>
+</head>
+<div id="logo">
+  <img src="logo.png" alt="Ro-Person">
+</div>
+
+<body><!-- BUTTON -->
+<button class="toggle" id="toggleBtn" onclick="toggleSidebar()">☰</button>
+
+<div id="profileBtn" onclick="toggleProfile()">👤</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h3>Ro-Person</h3>
+  <a href="home.html">Home</a>
+  <a href="Rules.html">Rules</a>
+  <a href="faq.html">FAQ</a>
+</div>
+
+<div id="profileOverlay">
+  <div id="profilePanel" class="card">
+    
+    <div id="verifyUI" style="display:none;">
+      <h3>Ro-Person Authentication</h3>
+      <p>Please verify your email before accessing your Ro-Person.</p>
+      
+      <input type="password" id="verifyPassword" placeholder="Enter password">
+      
+      <button onclick="resendVerification()">Resend Verification</button>
+      <button onclick="checkVerification()">I have verified</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginUI">
+      <h3>Login</h3>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p onclick="showSignup()" style="cursor:pointer;">Create Account</p>
+    </div>
+
+    <!-- SIGN UP -->
+    <div id="signupUI" style="display:none;">
+      <h3>Sign Up</h3>
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <input type="password" id="confirmPassword" placeholder="Confirm Password">
+      <button onclick="signup()">Create Account</button>
+      <p onclick="showLogin()" style="cursor:pointer;">Back to Login</p>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div id="accountUI" style="display:none;">
+      <h3>Ro-Person Authentication</h3>
+      <p id="userEmail"></p>
+      <p id="userName"></p>
+
+      <input type="text" id="newName" placeholder="Change name">
+      <button onclick="changeName()">Update Name</button>
+
+      <button onclick="sendVerification()">Verify Email</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+  </div>
+</div>
+
+<button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+
+<header>
+  <h1>Rule page</h1>
+  <p>A companion that learns through memories</p>
+  <p>Your very own personal companion</p>
+</header><section>
+  <h1 id="welcomeText" style="display:none;"></h1>
+  <div class="card">
+    <p>
+      <h3>Rules</h3>
+      To actually start and boot up your very own Ro-Person, please read all important rules of a Ro-Person. Every Ro-Person is programmed to have all of the starter important rules, but we also want to give each Ro-Person a unique personalities and emotions thats why we keep it subtle!
+    </p>
+    <p>So how do you add a rule in memory rules of your Ro-Person? There are two types of memory rule file in your Ro-Person which is the <a href="#basicRules">basic Rules</a> and <a href="#ImportantRules">Important Rules</a>. For you to understand and completely have a free-use of your own Ro-Person, please read all rules about Ro-Person and how to take care of it as an owner...</p>
+  </div>
+</section><section>
+  <img src="logo.png" alt="Ro-Person Protocol" width="300"></img>
+</section>
+<section id="basicRules">
+  <h2>Basic Rules of your Ro-person</h2>
+  <div class="card">
+    <h3>Basic rules...</h3>
+    <p>
+      What are the Basic Rules of a Ro-Person?
+    </p>
+    <p>
+      The Basic Rules of a Ro-Person are fundamental guidelines that shape their behavior and internal logic. However, these rules are not strictly enforced at all times. A Ro-Person may choose to follow them or ignore them depending on the situation, making these rules comparable to routine responsibilities or habits that are sometimes overlooked.
+    </p>
+    <p>
+      All files categorized under Basic Rules cannot be removed or replaced, as they are directly connected to the Personality Core of a Ro-Person. Removing a Basic Rule would be equivalent to deleting a core memory, which could significantly affect the integrity of their personality structure.
+      </p>
+      <p>
+      For a Ro-Person, Basic Rules are generally perceived as inherent truths. They acknowledge these rules as part of their identity, yet they retain the ability to defy or follow them at will. Although Basic Rules are considered part of the core system, they are ranked lower than memory files. As a result, a Ro-Person may occasionally forget or neglect these rules, similar to how humans sometimes forget routine tasks or responsibilities.
+      </p>
+  </div>
+</section><section id="ImportantRules">
+  <h2>Important Rules of your Ro-Person</h2>
+  <div class="card">
+    <h3>Important Rules...</h3>
+    <p>
+      What are the Important Rules of a Ro-Person?
+    </p>
+    <p>
+      Important Rules are fundamental directives that a Ro-Person is designed to follow at all times. Unlike Basic Rules, these rules are considered absolute and are not meant to be defied under normal circumstances. They serve as the highest level of behavioral authority within a Ro-Person’s system.
+    </p>
+    <p>
+      However, in rare and highly specific situations, an Important Rule may be temporarily bypassed in order to respond appropriately to an ongoing event. This exception does not negate the authority of the rule itself; rather, it allows the system to adapt while still prioritizing the overall integrity of the Ro-Person. Despite such cases, an Important Rule is ultimately expected to be upheld and enforced.
+    </p>
+    <p>
+      Important Rules are stored in a dedicated file known as “Important.rules”, which is located within the Ro-Person’s memory system. This separation from Basic Rules is intentional, as it ensures clarity and prevents conflicts or malfunctions that could arise from overlapping rule classifications. By isolating Important Rules in their own file, the Ro-Person can process them with higher priority and consistency.
+    </p>
+    <p>
+      It is also important to note that predefined Important Rules may evolve over time through learning protocols or accumulated experiences. However, modifying an Important Rule requires a specific and controlled process. This restriction ensures that such changes are extremely difficult to perform, thereby preserving system stability and preventing unintended alterations.
+    </p>
+  </div>
+</section><section>
+  <h2>Predefined Important Rules</h2>
+  <div class="card">
+    <li><h3>Ro-Person Rule 1: Ro-Person's self identity.</h3></li>
+    <p>A Ro-Person must have its own unique identity.</p>
+    <li><h3>Ro-Person Rule 3: Unique personality.</h3></li>
+    <p>Each Ro-Person must have Unique personalities.</p>
+  </div>
+</section><section>
+  <h2>Difference Between Basic Rules and Important Rules</h2>
+  <div class="card">
+    <p>
+      What is the difference between Basic Rules and Important Rules?
+    </p>
+    <p> The distinction between Basic Rules and Important Rules lies in their level of priority and enforcement. Basic Rules represent needs, guidelines that are expected to be followed but are not strictly mandatory. In contrast, Important Rules represent obligations that must be followed under all circumstances.
+    </p>
+    <p>
+      Additionally, Basic Rules are empty by default, meaning they do not contain predefined instructions and can vary depending on the Ro-Person’s development. On the other hand, Important Rules come with predefined or “starter” rules that are required to be followed from the beginning.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <p>Ro-Person Protocol V1.0 © 2026</p>
+  <p>Solaris Studio © 2026</p>
+</footer>
+<script type="module">
+import { login, signup, listenAuth, auth } from "./auth.js";
+import { toggleSidebar, toggleProfile } from "./ui.js";
+import { changeName, loadProfileUI } from "./profile.js";
+import { logout } from "./auth.js";
+
+window.login = () => login(loginEmail.value, loginPassword.value);
+window.signup = () => signup(signupEmail.value, signupPassword.value);
+window.logout = logout;
+window.toggleSidebar = toggleSidebar;
+window.toggleProfile = toggleProfile;
+window.changeName = changeName;
+
+listenAuth(async (user) => {
+  if (user && user.emailVerified) {
+    document.getElementById("loginUI").style.display = "none";
+    document.getElementById("accountUI").style.display = "block";
+
+    await loadProfileUI(user);
+  }
+});
+</script></body>
+</html>
