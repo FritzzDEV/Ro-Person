@@ -50,6 +50,14 @@ h2 {
   box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
+.convo {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
 footer {
   text-align: center;
   padding: 20px;
@@ -191,11 +199,14 @@ button {
 
 input {
   width: 100%;
-  padding: 30px 36px;
-  margin-top: 10px;
+  padding: 20px 26px;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
   background: #0b1220;
   border: 1px solid #334155;
-  border-radius: 10px;
+  border-radius: 12px;
   color: #e2e8f0;
   outline: none;
   transition: 0.2s;
@@ -209,11 +220,11 @@ input:focus {
 
 button {
   margin-top: 10px;
-  padding: 30px;
+  padding: 20px;
   width: 100%;
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   color: white;
   font-weight: bold;
@@ -234,8 +245,6 @@ body.shift {
 <div id="logo">
   <img src="logo.png" alt="Ro-Person">
 </div>
-
-  <div class="bg"></div>
 
 <body><!-- BUTTON -->
 <button class="toggle" id="toggleBtn" onclick="toggleSidebar()">☰</button>
@@ -303,6 +312,8 @@ body.shift {
 <header>
   <h1>ChatBot</h1>
 </header>
+
+<section type="convo"></section>
   <input id="msg" placeholder="Talk to Yumika">
 <button onclick="sendMessage()">Send</button>
 
