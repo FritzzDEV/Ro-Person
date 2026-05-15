@@ -198,12 +198,9 @@ button {
 }
 
 input {
-  width: 100%;
+  width: 75%;
   padding: 20px 26px;
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
   background: #0b1220;
   border: 1px solid #334155;
   border-radius: 12px;
@@ -220,8 +217,8 @@ input:focus {
 
 button {
   margin-top: 10px;
-  padding: 20px;
-  width: 100%;
+  padding: 10px;
+  width: 75%;
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   border: none;
   border-radius: 12px;
@@ -313,7 +310,9 @@ body.shift {
   <h1>ChatBot</h1>
 </header>
 
-<section type="convo"></section>
+<section>
+  <div type="convo">chat history</div>
+</section>
   <input id="msg" placeholder="Talk to Yumika">
 <button onclick="sendMessage()">Send</button>
 
